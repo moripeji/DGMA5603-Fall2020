@@ -4,6 +4,12 @@
 # name of the character.
 
 define r = Character("Reena")
+define j = Character("Jean")
+
+image white = Solid("#fff")
+image black = Solid("#000000")
+
+default sleepy = False
 
 #RenPy default positions = left, right, center, behind, front
 #RenPy position values=
@@ -32,6 +38,12 @@ transform bottomRightish:
     xalign 0.75
     yalign 0.5
 
+#RenPy sound channels: sound, music, voice
+#music channel LOOPS, saves with game
+#sound channel plays once (no loop), is NOT saved
+
+#main audio keywords: play, stop, queue
+#audio transitions: fadein, fadeout
 
 # The game starts here.
 
@@ -41,21 +53,62 @@ label start:
     # add a file (named either "bg room.png" or "bg room.jpg") to the
     # images directory to show it.
 
+    scene black
+
+    "Zzz..."
+
+    "Zzzzzzz..."
+
+    play sound "audio/alarm clock.ogg" fadein 3
+
+    "H... Huh? What?"
+
+    play music "audio/am birds.ogg" fadein 1 fadeout 5
+
+
+
+
     scene bg room morning
 
     # This shows a character sprite. A placeholder is used, but you can
     # replace it by adding a file named "eileen happy.png" to the images
     # directory.
 
-
-
     show reena neutral 1 at bottomLeft with dissolve
 
     r "Ugh, morning already?"
 
+
+if sleepy:
+    jump wakeUp
+else:
+    jump wakingUp
+
+label wakingUp:
+
+    show reena angry 1 at bottomLeft
+
+    r "Should I go back to sleep?"
+
+    menu:
+        "Yes. Get those ZZZs in!":
+            jump backToBed
+
+        "No. If I have to be awake, so do you.":
+            jump wakeUp
+
+
+
+label backToBed:
+    $ sleepy = True
+    jump start
+
+label wakeUp:
+
+    scene bg room morning
     show reena angry 1 at bottomCenter with Dissolve(0.25)
 
-    r "I have to get ready to go to the cafe!"
+    r "Ah! Look at the time! I have to get ready to go to the cafe!"
 
     show reena neutral 1 at bottomRightish
     show reena neutral 2 with dissolve
@@ -66,6 +119,8 @@ label start:
     r "I guess I'll go now..."
 
     scene bg cafe day
+
+    play music "audio/creamy lofi beat.mp3" fadein 2 fadeout 2
 
     show reena happy 1 at bottomLeft
 
@@ -78,14 +133,25 @@ label start:
     r "So glad it's National Coffee Day!"
 
     scene bg cafe fire
+    play sound "audio/fire blast.ogg"
+    play sound "audio/campfire.mp3"
 
     r "Wait... that's not the smell of coffee..."
 
+    stop music
     show reena sad 1 at bottomRightish
     show reena sad 2 with Dissolve(0.1)
     show reena sad 3 with Dissolve(0.1)
 
     r "Ah!!!!! It's fire!"
+
+    play sound "audio/smoke detector.ogg" fadein 1 fadeout 2
+
+    r "Someone help! Ahh!"
+
+    show black
+
+    "Fiery FIN."
 
 
 
